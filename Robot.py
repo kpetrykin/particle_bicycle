@@ -59,32 +59,24 @@ class Robot:
 
     def move(self, distance, steering):
         self.steering = steering + np.random.normal(0, self.turn_stand_dev)
-        distance += np.random.normal(0, self.move_stand_dev)
+        # distance += np.random.normal(0, self.move_stand_dev)
+        noise = np.random.normal(0, self.move_stand_dev)
 
         tr = self._calc_turn_radius(steering)
         if tr is not None:
             x_c, y_c = self._calc_turn_center(tr)
-            new_heading = self._calc_heading_after_move(tr, distance)
+            new_heading = self._calc_heading_after_move(tr, distance + noise)
             self.x, self.y = self._calc_position_after_move(
                 x_c, y_c, tr, new_heading)
             self.heading = new_heading
-            print('Robot moved to (', self.x, ',',
-                  self.y, ') heading ', self.heading)
+            # print('Robot moved to (', self.x, ',',
+            #       self.y, ') heading ', self.heading)
         else:
-            # TODO straight line
-            self.x = self.x + distance * cos(self.heading)
-            self.y = self.y + distance * sin(self.heading)
-            print('Robot moved straight to (', self.x, ',',
-                  self.y, ') heading ', self.heading)
-
-    def measurement_prob(self, self_sensed, etalon_sensed):
-        sensed_probs = []
-        for i, z_self in enumerate(self_sensed):
-            p1 = (1 / (sqrt(2 * pi * self.sense_stand_dev**2))) * np.exp(
-                (z_self - etalon_sensed[i])**2 / self.sense_stand_dev**2)
-            sensed_probs.append(p1)
-
-        return sensed_probs
+            # straight line
+            self.x = self.x + (distance + noise) * cos(self.heading)
+            self.y = self.y + (distance + noise) * sin(self.heading)
+            # print('Robot moved straight to (', self.x, ',',
+            #       self.y, ') heading ', self.heading)
 
     def sense(self):
         mean = 0
