@@ -4,7 +4,7 @@ from math import tan, atan2, sqrt
 import numpy as np
 from numpy import sin, cos, pi, linspace
 import random
-from Robot import Robot, p_lim
+from .Robot import Robot, p_lim
 import scipy.stats
 from copy import deepcopy
 
